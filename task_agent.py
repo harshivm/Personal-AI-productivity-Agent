@@ -21,11 +21,23 @@ labels = [
     "MEDIUM",
     "LOW"
 ]
+time = [
+    "3",
+    "2",
+    "1",
+    "3",
+    "1",
+    "3",
+    "2",
+    "1"
+]
 
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(tasks)
 model = LogisticRegression()
 model.fit(X,labels)
+model2 = LogisticRegression()
+model2.fit(X,time)
 
 def get_user_goal():
     goal = input("Please enter your task: ")
@@ -42,15 +54,11 @@ def assign_priority(task):
     prediction = model.predict(task_prio_vec)
     return prediction[0]
     
-    
-def estimated_time(task):
-    task = task.lower()
-    if "exam" in task:
-        return "3 hours"
-    elif "assignment" in task:
-        return "2 hours"
-    else:
-        return "1 hour"
+def assign_time(task):
+    task_time_vec = vectorizer.transform([task])
+    prediction = model2.predict(task_time_vec)   
+    return prediction[0]
+
 
 
 goal = get_user_goal()
@@ -69,7 +77,7 @@ for t in tasks:
 print("Estimated time")
 for t in tasks:
     priority = assign_priority(t)
-    time = estimated_time(t)
+    time = assign_time(t)
     print(f"{t}| {priority} | {time}")
 
 
