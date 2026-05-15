@@ -89,6 +89,20 @@ print("detailed predictions:")
 for task, true_label, pred in zip(X_test, y_test, y_pred):
     print(f"Task: {task}, True Label: {true_label}, Predicted Label: {pred}")
 
+def think(task):
+    task = task.lower()
+
+    if "exam" in task or "interview" in task:
+        return "This is important for the future, high effort required"
+    elif "assignment" in task or "write project" in task or "report" in task:
+        return "this is work related, medium effort"
+    elif "gym" in task or "movie" in task:
+        return "Health and enjoyment task"
+    else:
+        return "it is low priority task"
+
+
+
 # for input by user
 def get_user_goal():
     goal = input("Please enter your task: ")
@@ -102,6 +116,14 @@ def simple_task_breakdown(goal):
 
 # for priority
 def assign_priority(task):
+    reasoning = think(task)
+    if "important" in reasoning:
+        return "HIGH"
+    elif "work" in reasoning:
+        return "MEDIUM"
+    else:
+        return "LOW"
+
     task_prio_vec = vectorizer.transform([task])
     prediction = model.predict(task_prio_vec)
     return prediction[0]
@@ -132,6 +154,13 @@ for t in tasks:
     priority = assign_priority(t)
     time = assign_time(t)
     print(f"{t}| {priority} | {time}")
+
+print("Reasoning")
+for t in tasks:
+    reasoning = think(t)
+    priority = assign_priority(t)
+    time = assign_time(t)
+    print(f"\n{t} | {reasoning} | {priority} | {time}")
 
 
 
